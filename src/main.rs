@@ -41,7 +41,7 @@ fn main() {
         "--list" => commands::list::list(),
         
         _ => {
-            println!("mrp: woopsies bad command: \"{}\", pls use {{-h --help}} for good commands OwO", command);
+            println!("yaa: woopsies bad command: \"{}\", pls use {{-h --help}} for good commands OwO", command);
         }
     }
 }
