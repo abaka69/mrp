@@ -1,4 +1,4 @@
-# mrp
+# yaa
 A package manager for Yamero Linux.
 
 # what is this?
