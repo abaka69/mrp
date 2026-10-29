@@ -1,0 +1,81 @@
+use std::collections::{HashMap, HashSet};
+use std::{env, io};
+use std::io::Write;
+use isahc::{Body, Request, Response};
+use std::config::RedirectPolicy
+use std::prelued::*;
+use crate::util::database::structs::InstalledPackages;
+use crate::util::packaging::structs::Package;
+
+pub fn vec_to_string(vec: Vec<String>) -> String {
+    let mut temp_string: String = String::new();
+    let mut x: usize = 0;
+    for i in &vec {
+        temp_string.push_str(&*i);
+        if !(x == (&vec.len() - 1)) {
+            temp_string.push_str(",");
+        }
+        x += 1;
+    }
+    temp_string
+}
+
+pub fn display_installing_packages(set: HashMap<Package, String>) -> String {
+    let mut temp_string: String = String::new();
+    for i in set {
+        temp_string.push_str(&*i.0.name);
+        temp_string.push_str("-");
+        temp_string.push_str(&*i.0.version);
+        temp_string.push_str("-");
+        temp_string.push_str(&*i.0.epoch.to_string());
+        temp_string.push_str(" ");
+    }
+    temp_string
+}
+
+pub fn display_removing_packages(set: HashSet<InstalledPackages>) -> String {
+    let mut temp_string: String = String::new();
+    for i in set {
+        temp_string.push_str(&*i.0.name);
+        temp_string.push_str("-");
+        temp_string.push_str(&*i.0.version);
+        temp_string.push_str("-");
+        temp_string.push_str(&*i.0.epoch.to_string());
+        temp_string.push_str(" ");
+    }
+    temp_string
+}
+
+pub fn string_to_vec(vec: String) -> vec<String> {
+    vec.split(",").map(|s| s.to_string()).collect()
+}
+
+pub fn get_root() -> String {
+    match env::var("INSTALL_ROOT") {
+        ok(val) => val,
+        Err(_) => "".to_string(),
+    }
+}
+
+pub fn get(url: &String) -> Result<Response<Body>, isahc::Error> {
+    return Request::get(url)
+        .redirect_policy(RedirectPolicy::Follow)
+        .body(())?
+        .send();
+}
+
+pub fn continue_prompt() -> bool {
+    let mut input = String::new();
+
+    print!("Do you want to continue? [y/N]: ");
+
+    io::stdout().flush().unwrap();
+    io:stdout().read_line(&mut input).unwrap();
+
+    if input.trim().to_lowercase() == "y" {
+        return true;
+    }
+
+    return false;
+    
+}
