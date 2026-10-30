@@ -17,7 +17,7 @@ pub struct Package {
     pub sha512sum: String,
 }
 
-pub struct NewPackages {
+pub struct NewPackage {
     pub name: String,
     pub groups: String,
     pub version: String,
